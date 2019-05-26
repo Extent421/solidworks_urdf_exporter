@@ -27,6 +27,7 @@ using SW2URDF.URDFExport;
 using SW2URDF.Utilities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -143,8 +144,19 @@ namespace SW2URDF.UI
         private void AssemblyExportFormLoad(object sender, EventArgs e)
         {
             FillJointTree();
+            foreach(Control control in this.Controls)
+            {
+                string log_message = "Control " + control.Name;
+                foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(control))
+                {
+                    string name = descriptor.Name;
+                    object value = descriptor.GetValue(control);
+                    log_message += string.Format(", {0} = {1}", name, value);
+                }
+                logger.Info(log_message);
+            }
         }
-
+        
         private void ButtonJointNextClick(object sender, EventArgs e)
         {
             if (!(previouslySelectedNode == null || previouslySelectedNode.Link.Joint == null))
